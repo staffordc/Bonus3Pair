@@ -14,25 +14,29 @@ namespace Bon3NumG
             bool WrongNum;
             int Guess;
             var Repeat = true;
+            int GuessCount;
 
             Random CreateNum = new Random();
 
             while (Repeat)
 
             {//generate number
-                
+                GuessCount = 0;
                 ActNum = CreateNum.Next(1, 101);
 
                 //ask for input
+                Console.WriteLine(ActNum);
                 Console.WriteLine("I gotta number, can you guess which one?");
                 WrongNum = true;
                 while (WrongNum)
-                {
-                    Guess = Int32.Parse(Console.ReadLine());
 
-                    if(Guess != ActNum)
+                {
+                    Guess = Validate();
+                    GuessCount++;
+                    if (Guess != ActNum)
                     {
-                        if(Guess - ActNum < 10)
+
+                        if (Guess - ActNum < 10 && Guess - ActNum > 0)
                         {
                             Console.WriteLine("Close, but still high");
                         }
@@ -40,7 +44,7 @@ namespace Bon3NumG
                         {
                             Console.WriteLine("Too High");
                         }
-                        else if (ActNum - Guess < 10)
+                        else if (ActNum - Guess < 10 && ActNum - Guess > 0)
                         {
                             Console.WriteLine("Close, but still low");
                         }
@@ -49,21 +53,34 @@ namespace Bon3NumG
                             Console.WriteLine("Too Low");
                         }
                     }
-                    
 
-                    else 
+
+                    else
                     {
                         Console.WriteLine("Correct!");
                         WrongNum = false;
+                        Console.WriteLine("It took " + GuessCount + " tries");
+                        if (GuessCount > 10)
+                        {
+                            Console.WriteLine("Bad job");
+                        }
+                        else if (GuessCount > 5)
+                        {
+                            Console.WriteLine("ehhh job");
+                        }
+                        else
+                        {
+                            Console.WriteLine("good job.");
+                        }
                     }
                 }
                 //correct?
                 //Off by what?
-                
+
                 Repeat = Retry();
-                
+
             }
-            
+
         }
         //restart?
         static bool Retry()
@@ -71,21 +88,37 @@ namespace Bon3NumG
             Console.WriteLine("Continue? (y/n)");
             String Answer = Console.ReadLine().ToUpper();
 
+            //var enteredYes = new[] { "Y", "YES" }.Contains(Answer);
+
             if (Answer == "Y" || Answer == "YES")
             {
                 return true;
-                
+
             }
             else if (Answer == "N" || Answer == "NO")
             {
                 return false;
 
             }
-            else 
+            else
             {
                 Console.WriteLine("IDK mang, gimme a y or n plz");
                 return Retry();
 
+            }
+
+        }
+        static int Validate()
+        {
+            String Input = Console.ReadLine();
+            if (Int32.TryParse(Input, out int result) && result > 0 && result < 101)
+            {
+                return result;
+            }
+            else
+            {
+                Console.WriteLine("Nice try, it's gotta be between 1 and 100");
+                return Validate();
             }
         }
     }
